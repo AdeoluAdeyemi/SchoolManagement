@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace SchoolManagement.Controllers
 {
-    //[Authorize(Roles="Admin")]
+    [Authorize(Policy= "AdminRolePolicy")]
     public class AdministrationController : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -418,6 +418,7 @@ namespace SchoolManagement.Controllers
         } 
 
         [HttpPost]
+        [Authorize(Policy ="DeleteRolePolicy")]
         public async Task<IActionResult> DeleteRole(string roleId)
         {
             var role = await _roleManager.FindByIdAsync(roleId);
