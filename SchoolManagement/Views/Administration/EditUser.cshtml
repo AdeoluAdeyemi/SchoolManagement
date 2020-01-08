@@ -70,6 +70,8 @@
             Manage Roles
         </a>
     </div>
+</div>
+
 <div class="card mb-3 mt-3">
     <div class="card-header">
         User Claims
@@ -88,7 +90,7 @@
         }
     </div>
     <div class="card-footer">
-        <a asp-controller="Administration" asp-action="EditUsersInRole" class="btn btn-primary">
+        <a asp-controller="Administration" asp-action="ManageUserClaims" asp-route-userId="@Model.Id" class="btn btn-primary">
             Manage Claims
         </a>
     </div>
