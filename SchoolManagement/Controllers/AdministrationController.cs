@@ -315,7 +315,7 @@ namespace SchoolManagement.Controllers
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
-            return View(model);
+            return View("ListRoles");
         }
 
         [HttpGet]
@@ -326,7 +326,6 @@ namespace SchoolManagement.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = "EditRolePolicy")]
         public async Task<IActionResult> EditUser(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
@@ -357,7 +356,6 @@ namespace SchoolManagement.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = "EditRolePolicy")]
         public async Task<IActionResult> EditUser(EditUserViewModel model)
         {
             var user = await _userManager.FindByIdAsync(model.Id);
@@ -498,7 +496,8 @@ namespace SchoolManagement.Controllers
         //    return View("ListRoles");
         //}
 
-            [HttpGet]
+        [HttpGet]
+        [Authorize(Policy = "EditRolePolicy")]
         public async Task<IActionResult> ManageUserRoles(string userId){
             ViewBag.userId = userId;
 
@@ -535,6 +534,7 @@ namespace SchoolManagement.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "EditRolePolicy")]
         public async Task<IActionResult> ManageUserRoles(List<UserRolesViewModel> model, string userId)
         {
 

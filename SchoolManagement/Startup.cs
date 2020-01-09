@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SchoolManagement.Models;
+using SchoolManagement.Security;
 
 namespace SchoolManagement
 {
@@ -46,16 +47,25 @@ namespace SchoolManagement
                                  .Build();
                 options.Filters.Add(new AuthorizeFilter(policy));
             });
-            services.AddScoped<IStudentRepository, SQLStudentRepository>();
             services.AddAuthorization(options => {
-                options.AddPolicy("DeleteRolePolicy", policy => policy.RequireClaim("Delete Role"));
+                options.AddPolicy("DeleteRolePolicy", policy => policy.AddRequirements(new ManageAdminRolesAndClaimsRequirement());
                 
                 options.AddPolicy("EditRolePolicy", policy => policy.RequireClaim("Edit Role"));
+
+                //options.AddPolicy("EditRolePolicy", policy => policy.RequireAssertion(context =>
+                //      context.User.IsInRole("Admin") &&
+                //      context.User.HasClaim(claim => claim.Type == "Edit Role" && claim.Value == "true") ||
+                //      context.User.IsInRole("Super Admin")
+                //      ));
 
                 options.AddPolicy("CreateRolePolicy", policy => policy.RequireClaim("Create Role"));
 
                 options.AddPolicy("AdminRolePolicy", policy => policy.RequireRole("Admin"));
             });
+
+            services.AddScoped<IStudentRepository, SQLStudentRepository>();
+            services.AddSingleton<IAuthorizationHandler, CanEditOnlyOtherAdminRolesAndClaimsHandler>();
+            services.AddSingleton<IAuthorizationHandler, SuperAdminHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
