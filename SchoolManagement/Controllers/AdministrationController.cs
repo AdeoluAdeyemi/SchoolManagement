@@ -326,6 +326,7 @@ namespace SchoolManagement.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "EditRolePolicy")]
         public async Task<IActionResult> EditUser(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
@@ -356,6 +357,7 @@ namespace SchoolManagement.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "EditRolePolicy")]
         public async Task<IActionResult> EditUser(EditUserViewModel model)
         {
             var user = await _userManager.FindByIdAsync(model.Id);
@@ -565,5 +567,11 @@ namespace SchoolManagement.Controllers
             return RedirectToAction("EditUser", new { userId = userId });
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
     }
 }

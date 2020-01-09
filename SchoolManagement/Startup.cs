@@ -36,6 +36,9 @@ namespace SchoolManagement
 
             //services.AddMvc();
 
+            services.ConfigureApplicationCookie(options => {
+                options.AccessDeniedPath = new PathString("/Administration/AccessDenied");
+            });
             services.AddMvc(options =>
             {
                 var policy = new AuthorizationPolicyBuilder()
@@ -45,8 +48,11 @@ namespace SchoolManagement
             });
             services.AddScoped<IStudentRepository, SQLStudentRepository>();
             services.AddAuthorization(options => {
-                options.AddPolicy("DeleteRolePolicy", policy => policy.RequireClaim("Delete Role")
-                                                                      .RequireClaim("Create Role"));
+                options.AddPolicy("DeleteRolePolicy", policy => policy.RequireClaim("Delete Role"));
+                
+                options.AddPolicy("EditRolePolicy", policy => policy.RequireClaim("Edit Role"));
+
+                options.AddPolicy("CreateRolePolicy", policy => policy.RequireClaim("Create Role"));
 
                 options.AddPolicy("AdminRolePolicy", policy => policy.RequireRole("Admin"));
             });
